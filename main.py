@@ -13,15 +13,15 @@ pygame.display.set_caption('OPENGL')
 clock = pygame.time.Clock()
 
 render = Renderer(screen, width, height)
-render.set_shaders(vertex_shader, fragment_shader)
+render.setShaders(vertex_shader, fragment_shader)
 
 '''
 * Posiciones
 * Color
 '''
-verts = np.array([-0.5, -0.5, 0.0, 1.0, 0.0, 0.0,
-                  0.5, -0.5, 0.0,  0.0, 1.0, 0.0,
-                  0.0, 0.5, 0.0,   0.0, 0.0, 1.0], dtype=np.float32)
+verts = np.array([-0.5, -0.5, -10.0, 1.0, 0.0, 0.0,
+                   0.5, -0.5, -10.0,  0.0, 1.0, 0.0,
+                   0.0,  0.5, -10.0,   0.0, 0.0, 1.0], dtype=np.float32)
 triangle = Triangle(verts)
 
 render.scene.append(triangle)

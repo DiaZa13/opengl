@@ -1,6 +1,5 @@
 import numpy as np
 from OpenGL.GL import *
-
 import glm
 from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
@@ -13,6 +12,23 @@ class Triangle(object):
         self.VBO = glGenBuffers(1)
         # Vertex array object → donde se guardan los buffers
         self.VAO = glGenVertexArrays(1)
+
+        self.position = glm.vec3(0, 0, 0)
+        self.rotation = glm.vec3(0, 0, 0)
+        self.scale = glm.vec3(1, 1, 1)
+
+    def modelMatrix(self):
+        identity = glm.mat4(1)
+        translate = glm.translate(identity, self.position)
+
+        pitch = glm.rotate(identity, glm.radians(self.rotation.x), glm.vec3(1, 0, 0))
+        yaw = glm.rotate(identity, glm.radians(self.rotation.y), glm.vec3(0, 1, 0))
+        roll = glm.rotate(identity, glm.radians(self.rotation.z), glm.vec3(0, 0, 1))
+        rotation = pitch * yaw * roll
+
+        scale = glm.scale(identity, self.scale)
+
+        return translate * rotation * scale
 
     def render(self):
         # "Guardando" en OpenGl el vertex array
