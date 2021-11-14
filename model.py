@@ -5,7 +5,7 @@ from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
 
 
-class Triangle(object):
+class Model(object):
     def __init__(self, verts):
         self.vertex = verts
         # Vertex buffer → posición en memoria donde guardaré los vértices

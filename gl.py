@@ -5,22 +5,20 @@ from OpenGL.GL.shaders import compileShader, compileProgram
 
 
 class Renderer(object):
-    def __init__(self, screen, width, height):
+    def __init__(self, screen, width, height, camera):
         self.screen = screen
         self.width = width
         self.height = height
-        # Objetos que se renderizarán en mi escena
-        self.scene = []
-        # Shader
-        self.active_shader = None
-        # View matrix
-        self.camera_position = glm.vec3(0, 0, 0)
-        self.rotation = glm.vec3(0, 0, 0)  # pitch, yaw, roll
+
         # Activando del z-buffer
         glEnable(GL_DEPTH_TEST)
         glViewport(0, 0, self.width, self.height)
 
-        # viewport_matrix (opengl ya lo hace) * projection_matrix * view_matrix * model_matrix * pos
+        # Objetos que se renderizarán en mi escena
+        self.scene = []
+        # Shader
+        self.active_shader = None
+        self.camera = camera
         '''
         * fov → radians
         * Aspect ratio 
@@ -30,23 +28,10 @@ class Renderer(object):
         fov = glm.radians(60)
         aspect_ratio = self.width / self.height
         self.projection_matrix = glm.perspective(fov, aspect_ratio, 0.1, 1000)
-        # self.projection_matrix = glm.perspective(glm.radians(60),  # FOV en radianes
-        #                                          self.width / self.height,  # Aspect Ratio
-        #                                          0.1,  # Near Plane distance
-        #                                          1000)
 
+    # viewport_matrix (opengl ya lo hace) * projection_matrix * view_matrix * model_matrix * pos
     def viewMatrix(self):
-        identity = glm.mat4(1)
-        translate = glm.translate(identity, self.camera_position)
-
-        pitch = glm.rotate(identity, glm.radians(self.rotation.x), glm.vec3(1, 0, 0))
-        yaw = glm.rotate(identity, glm.radians(self.rotation.y), glm.vec3(0, 1, 0))
-        roll = glm.rotate(identity, glm.radians(self.rotation.z), glm.vec3(0, 0, 1))
-        rotation = pitch * yaw * roll
-
-        camera_matrix = translate * rotation
-
-        return glm.inverse(camera_matrix)
+        return glm.inverse(self.camera.cameraMatrix())
 
     def setShaders(self, vertex, fragment):
         self.active_shader = compileProgram(compileShader(vertex, GL_VERTEX_SHADER),
