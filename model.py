@@ -1,17 +1,16 @@
-import numpy as np
-from OpenGL.GL import *
 import glm
 from OpenGL.GL import *
-from OpenGL.GL.shaders import compileProgram, compileShader
-
 
 class Model(object):
-    def __init__(self, verts):
+    def __init__(self, verts, index):
         self.vertex = verts
+        self.index = index
         # Vertex buffer → posición en memoria donde guardaré los vértices
         self.VBO = glGenBuffers(1)
         # Vertex array object → donde se guardan los buffers
         self.VAO = glGenVertexArrays(1)
+        # Buffer que guardara los indices del objeto → Element array object
+        self.EAO = glGenBuffers(1)
 
         self.position = glm.vec3(0, 0, 0)
         self.rotation = glm.vec3(0, 0, 0)
@@ -35,6 +34,7 @@ class Model(object):
         glBindVertexArray(self.VAO)
         # "Atando" a OpenGL el vertex buffer
         glBindBuffer(GL_ARRAY_BUFFER, self.VBO)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.EAO)
 
         # Cuál es la información que yo quiero ingresar al buffer
         '''
@@ -44,6 +44,7 @@ class Model(object):
         * Usage 
         '''
         glBufferData(GL_ARRAY_BUFFER, self.vertex.nbytes, self.vertex, GL_STATIC_DRAW)
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, self.index.nbytes, self.index, GL_STATIC_DRAW)
 
         # Atributos → Cómo quiero que lea la información (los vertex que paso)
         '''
@@ -68,4 +69,6 @@ class Model(object):
         * Indice en el que empieza a dibujar
         * Cantidad de índices a los que se hace referencia
         '''
-        glDrawArrays(GL_TRIANGLES, 0, 3)
+        # glDrawArrays(GL_TRIANGLES, 0, 3)
+        # Función para que dibuje con base a índices
+        glDrawElements(GL_TRIANGLES, len(self.index), GL_UNSIGNED_INT, None)
