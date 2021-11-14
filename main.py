@@ -49,7 +49,7 @@ cube.position.z = -5.0
 
 render.scene.append(cube)
 while 1:
-
+    render.time += delta_time
     keys = pygame.key.get_pressed()
 
     if keys[K_d]:
@@ -69,10 +69,14 @@ while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
-        if event.key == K_1:
-            render.filledMode()
-        if event.key == K_2:
-            render.wireFrame()
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                sys.exit()
+            if event.key == K_1:
+                render.filledMode()
+            if event.key == K_2:
+                render.wireframeMode()
 
     render.render()
     delta_time = clock.tick(60) / 1000

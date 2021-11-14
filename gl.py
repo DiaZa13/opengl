@@ -16,7 +16,7 @@ class Renderer(object):
         self.scene = []
         # Shader
         self.active_shader = None
-
+        self.time = 0
         # self.camera = camera
 
         # View Matrix
@@ -75,6 +75,7 @@ class Renderer(object):
                                glm.value_ptr(self.viewMatrix()))
             glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'projection_matrix'), 1, GL_FALSE,
                                glm.value_ptr(self.projection_matrix))
+            glUniform1f(glGetUniformLocation(self.active_shader, 'tiempo'), self.time)
 
         for figure in self.scene:
             glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'model_matrix'), 1, GL_FALSE,
