@@ -17,7 +17,9 @@ class Renderer(object):
         # Shader
         self.active_shader = None
         self.time = 0
+        self.zoom = 0
         self.camera = camera
+        self.point_light = glm.vec3(-10, 5, -5)
 
         '''
         * fov → radians
@@ -61,6 +63,9 @@ class Renderer(object):
             glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'projection_matrix'), 1, GL_FALSE,
                                glm.value_ptr(self.projection_matrix))
             glUniform1f(glGetUniformLocation(self.active_shader, 'tiempo'), self.time)
+            glUniform1f(glGetUniformLocation(self.active_shader, '_zoom'), self.zoom)
+
+            glUniform3f(glGetUniformLocation(self.active_shader, '_light'), self.point_light.x, self.point_light.y, self.point_light.z)
 
         for figure in self.scene:
             glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'model_matrix'), 1, GL_FALSE,
