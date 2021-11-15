@@ -23,25 +23,63 @@ render.setShaders(vertex_shader, fragment_shader)
 * Posiciones
 * Color
 '''
-verts = np.array([-0.5, -0.5, 0.0, 1.0, 0.0, 0.0,
-                  0.5, -0.5, 0.0, 0.0, 1.0, 0.0,
-                  0.0, 0.5, 0.0, 0.0, 0.0, 1.0], dtype=np.float32)
+cube_data = np.array([ 0,    1,   0.5, 1.0, 0.0, 0.0,
+                      -0.5,  0,   0.5, 0.0, 1.0, 0.0,
+                       0.5,  0,   0.5, 0.0, 0.0, 1.0,
+                      -1.5,  0,   0.5, 1.0, 1.0, 0.0,
+                       1.5,  0,   0.5, 1.0, 0.0, 1.0,
+                      -0.7, -0.7, 0.5, 1.0, 1.0, 0.0,
+                       0.7, -0.7, 0.5, 1.0, 0.0, 1.0,
+                      -1,   -1.8, 0.5, 0.0, 1.0, 1.0,
+                       1,   -1.8, 0.5, 1.0, 0.0, 0.0,
+                       0,   -1.2, 0.5, 1.0, 1.0, 0.0,
 
-cube_data = np.array([-0.5, -0.5, 0.5, 1.0, 0.0, 0.0,
-                      -0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
-                      0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
-                      0.5, -0.5, 0.5, 1.0, 1.0, 0.0,
-                      -0.5, -0.5, -0.5, 1.0, 0.0, 1.0,
-                      -0.5, 0.5, -0.5, 0.0, 1.0, 1.0,
-                      0.5, 0.5, -0.5, 1.0, 1.0, 1.0,
-                      0.5, -0.5, -0.5, 0.0, 0.0, 0.0], dtype=np.float32)
+                       0,    1,   0, 0.0, 0.0, 0.0,
+                      -0.5,  0,   0, 0.0, 1.0, 0.0,
+                       0.5,  0,   0, 0.0, 0.0, 1.0,
+                      -1.5,  0,   0, 1.0, 1.0, 0.0,
+                       1.5,  0,   0, 1.0, 0.0, 1.0,
+                      -0.7, -0.7, 0, 1.0, 1.0, 0.0,
+                       0.7, -0.7, 0, 1.0, 0.0, 1.0,
+                      -1,   -1.8, 0, 0.0, 1.0, 1.0,
+                       1,   -1.8, 0, 1.0, 0.0, 0.0,
+                       0,   -1.2, 0, 1.0, 1.0, 0.0,
+                       ], dtype=np.float32)
 
-index_data = np.array([0, 1, 3, 1, 2, 3,
-                       1, 5, 2, 5, 6, 2,
-                       4, 5, 0, 5, 1, 0,
-                       3, 2, 7, 6, 2, 7,
-                       4, 0, 7, 0, 3, 7,
-                       5, 4, 6, 4, 7, 6], dtype=np.uint32)
+index_data = np.array([0, 1, 2,
+                       5, 1, 3,
+                       2, 4, 6,
+                       5, 7, 9,
+                       9, 8, 6,
+                       1, 9, 5,
+                       1, 2, 6,
+                       1, 6, 9,
+                       10, 11, 12,
+                       15, 11, 13,
+                       12, 14, 16,
+                       15, 17, 19,
+                       19, 18, 16,
+                       11, 19, 15,
+                       11, 12, 16,
+                       11, 16, 19,
+                       0, 1, 11,
+                       0, 10, 11,
+                       0, 2, 12,
+                       0, 10, 12,
+                       3, 5, 15,
+                       3, 13, 15,
+                       4, 2, 12,
+                       4, 12, 14,
+                       4, 6, 16,
+                       4, 14, 16,
+                       8, 16, 18,
+                       8, 6, 16,
+                       8, 18, 19,
+                       8, 9, 19,
+                       7, 17, 19,
+                       7, 9, 17,
+                       7, 5, 15,
+                       7, 17, 15], dtype=np.uint32)
 
 cube = Model(cube_data, index_data)
 
@@ -52,19 +90,33 @@ while 1:
     render.time += delta_time
     keys = pygame.key.get_pressed()
 
+    # Camera translation
     if keys[K_d]:
-        render.camPosition.x += 1 * delta_time
+        render.camera.position.x += 1 * delta_time
     if keys[K_a]:
-        render.camPosition.x -= 1 * delta_time
-    if keys[K_w]:
-        render.camPosition.z += 1 * delta_time
-    if keys[K_s]:
-        render.camPosition.z -= 1 * delta_time
-
+        render.camera.position.x -= 1 * delta_time
     if keys[K_q]:
-        render.camRotation.y -= 5 * delta_time
+        render.camera.position.y -= 1 * delta_time
     if keys[K_e]:
-        render.camRotation.y += 5 * delta_time
+        render.camera.position.y += 1 * delta_time
+    if keys[K_w]:
+        render.camera.position.z += 1 * delta_time
+    if keys[K_s]:
+        render.camera.position.z -= 1 * delta_time
+
+    # render.scene[0].rotation.x += 10 * delta_time
+    render.scene[0].rotation.y += 10 * delta_time
+    # render.scene[0].rotation.z += 10 * delta_time
+
+    # Camera rotation
+    if keys[K_UP]:
+        render.camera.rotation.y += 10 * delta_time
+    if keys[K_DOWN]:
+        render.camera.rotation.y -= 10 * delta_time
+    if keys[K_LEFT]:
+        render.camera.rotation.x -= 10 * delta_time
+    if keys[K_RIGHT]:
+        render.camera.rotation.x += 10 * delta_time
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -76,7 +128,7 @@ while 1:
             if event.key == K_1:
                 render.filledMode()
             if event.key == K_2:
-                render.wireframeMode()
+                render.wireFrame()
 
     render.render()
     delta_time = clock.tick(60) / 1000

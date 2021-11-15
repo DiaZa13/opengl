@@ -18,7 +18,7 @@ uniform float tiempo;
 out vec3 out_color;
 
 void main(){ 
-    vec4 pos = vec4(position.x, position.y + sin(tiempo), position.z, 1.0);
+    vec4 pos = vec4(position.x, position.y, position.z, 1.0);
     gl_Position = projection_matrix * view_matrix * model_matrix * pos;
     out_color = _color;
 }

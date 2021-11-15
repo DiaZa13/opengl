@@ -17,11 +17,8 @@ class Renderer(object):
         # Shader
         self.active_shader = None
         self.time = 0
-        # self.camera = camera
+        self.camera = camera
 
-        # View Matrix
-        self.camPosition = glm.vec3(0, 0, 0)
-        self.camRotation = glm.vec3(0, 0, 0)  # pitch, yaw, roll
         '''
         * fov → radians
         * Aspect ratio 
@@ -33,19 +30,7 @@ class Renderer(object):
 
     # viewport_matrix (opengl ya lo hace) * projection_matrix * view_matrix * model_matrix * pos
     def viewMatrix(self):
-        identity = glm.mat4(1)
-
-        translateMatrix = glm.translate(identity, self.camPosition)
-
-        pitch = glm.rotate(identity, glm.radians(self.camRotation.x), glm.vec3(1, 0, 0))
-        yaw = glm.rotate(identity, glm.radians(self.camRotation.y), glm.vec3(0, 1, 0))
-        roll = glm.rotate(identity, glm.radians(self.camRotation.z), glm.vec3(0, 0, 1))
-
-        rotationMatrix = pitch * yaw * roll
-
-        camMatrix = translateMatrix * rotationMatrix
-
-        return glm.inverse(camMatrix)
+        return glm.inverse(self.camera.cameraMatrix())
 
     def wireFrame(self):
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)

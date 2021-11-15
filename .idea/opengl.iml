@@ -3,8 +3,10 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/env2.7" />
+      <excludeFolder url="file://$MODULE_DIR$/env3.9-32" />
+      <excludeFolder url="file://$MODULE_DIR$/env" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.9 (env)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.9 (opengl)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="OpenGL_Carlos" />
   </component>
