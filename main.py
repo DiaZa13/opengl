@@ -83,7 +83,7 @@ index_data = np.array([0, 1, 2,
 
 cube = Model(cube_data, index_data)
 
-cube.position.z = -5.0
+cube.position.z = -10
 
 render.scene.append(cube)
 while 1:
@@ -105,18 +105,36 @@ while 1:
         render.camera.position.z -= 1 * delta_time
 
     # render.scene[0].rotation.x += 10 * delta_time
-    render.scene[0].rotation.y += 10 * delta_time
+    # render.scene[0].rotation.y += 10 * delta_time
     # render.scene[0].rotation.z += 10 * delta_time
+    # render.camera.rotation.y += 5 * delta_time
+    # render.camera.position.x -= render.camera.rotation.y * delta_time
+    # render.scene[0].rotation.y -= render.camera.rotation.y * delta_time
+    # render.scene[0].position.x = render.camera.rotation.y * delta_time
+    # render.scene[0].position.x += 10 * delta_time
+
 
     # Camera rotation
     if keys[K_UP]:
-        render.camera.rotation.y += 10 * delta_time
+        if render.scene[0].scale.x < 5:
+            render.scene[0].scale.x += 1 * delta_time
+            render.scene[0].scale.y += 1 * delta_time
+            render.scene[0].scale.z += 1 * delta_time
     if keys[K_DOWN]:
-        render.camera.rotation.y -= 10 * delta_time
+        if render.scene[0].scale.x > 1:
+            render.scene[0].scale.x -= 1 * delta_time
+            render.scene[0].scale.y -= 1 * delta_time
+            render.scene[0].scale.z -= 1 * delta_time
     if keys[K_LEFT]:
-        render.camera.rotation.x -= 10 * delta_time
+        render.camera.position.x -= 1 * delta_time
+        render.camera.rotation.y -= 10 * delta_time
+        render.scene[0].position.x += 1 * delta_time
+        render.scene[0].position.x += 1 * delta_time
+        render.scene[0].rotation.y += 5 * delta_time
+        print(render.camera.position.x)
+        print(render.scene[0].position.x)
     if keys[K_RIGHT]:
-        render.camera.rotation.x += 10 * delta_time
+        render.camera.rotation.y += 10 * delta_time
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
