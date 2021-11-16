@@ -113,7 +113,6 @@ while 1:
     # render.scene[0].position.x = render.camera.rotation.y * delta_time
     # render.scene[0].position.x += 10 * delta_time
 
-
     # Camera rotation
     if keys[K_UP]:
         if render.scene[0].scale.x < 5:
@@ -126,15 +125,13 @@ while 1:
             render.scene[0].scale.y -= 1 * delta_time
             render.scene[0].scale.z -= 1 * delta_time
     if keys[K_LEFT]:
-        render.camera.position.x -= 1 * delta_time
-        render.camera.rotation.y -= 10 * delta_time
-        render.scene[0].position.x += 1 * delta_time
-        render.scene[0].position.x += 1 * delta_time
-        render.scene[0].rotation.y += 5 * delta_time
-        print(render.camera.position.x)
-        print(render.scene[0].position.x)
+        render.camera.rotation.y += 5 * delta_time
+        render.camera.position.x -= 5 * delta_time
+        render.scene[0].position.x -= render.camera.position.x / 2 * delta_time
+        render.scene[0].position.z += 5 * delta_time
+        render.camera.position.x += 5 * delta_time
     if keys[K_RIGHT]:
-        render.camera.rotation.y += 10 * delta_time
+        render.camera.rotation.y += 5 * delta_time
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
