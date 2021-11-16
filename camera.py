@@ -1,4 +1,5 @@
 import glm
+from numpy import sin, cos
 
 
 class Camera(object):
@@ -6,6 +7,8 @@ class Camera(object):
         # View matrix
         self.position = position
         self.rotation = rotation  # pitch, yaw, roll
+        self.angle = 0
+        self.radius = -5
 
     def cameraMatrix(self):
         identity = glm.mat4(1)
@@ -17,3 +20,11 @@ class Camera(object):
         rotation = pitch * yaw * roll
 
         return translate * rotation
+
+    def orbitMovement(self, center=glm.vec3(0, 0, 0)):
+        self.position.x = sin(glm.radians(self.angle)) * self.radius
+        self.position.z = cos(glm.radians(self.angle)) * self.radius
+
+        return glm.lookAt(center - self.position, center, glm.vec3(0, 1, 0))
+
+

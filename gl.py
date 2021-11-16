@@ -32,6 +32,9 @@ class Renderer(object):
     def viewMatrix(self):
         return glm.inverse(self.camera.cameraMatrix())
 
+    def orbitMovement(self):
+        return self.camera.orbitMovement(self.scene[0].position)
+
     def wireFrame(self):
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
 
@@ -43,7 +46,7 @@ class Renderer(object):
                                             compileShader(fragment, GL_FRAGMENT_SHADER))
 
     # Función que se llamará una vez cada cuadro
-    def render(self):
+    def render(self, orbit=False):
         # Color para hacer el clear
         glClearColor(0.2, 0.2, 0.2, 1)
         # Clear al fondo y al buffer de profundidad
@@ -56,8 +59,13 @@ class Renderer(object):
             * Cantidad de parámetros a pasar
             * Transpose
             '''
-            glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'view_matrix'), 1, GL_FALSE,
-                               glm.value_ptr(self.viewMatrix()))
+            if orbit:
+                glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'view_matrix'), 1, GL_FALSE,
+                                   glm.value_ptr(self.orbitMovement()))
+            else:
+                glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'view_matrix'), 1, GL_FALSE,
+                                   glm.value_ptr(self.viewMatrix()))
+
             glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'projection_matrix'), 1, GL_FALSE,
                                glm.value_ptr(self.projection_matrix))
             glUniform1f(glGetUniformLocation(self.active_shader, 'tiempo'), self.time)

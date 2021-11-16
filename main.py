@@ -83,12 +83,15 @@ index_data = np.array([0, 1, 2,
 
 cube = Model(cube_data, index_data)
 
-cube.position.z = -10
+cube.position.z = -5
 
 render.scene.append(cube)
+orbit = False
 while 1:
     render.time += delta_time
     keys = pygame.key.get_pressed()
+    render.camera.angle += 15 * delta_time
+    render.camera.radius = render.scene[0].position.z
 
     # Camera translation
     if keys[K_d]:
@@ -104,18 +107,9 @@ while 1:
     if keys[K_s]:
         render.camera.position.z -= 1 * delta_time
 
-    # render.scene[0].rotation.x += 10 * delta_time
-    # render.scene[0].rotation.y += 10 * delta_time
-    # render.scene[0].rotation.z += 10 * delta_time
-    # render.camera.rotation.y += 5 * delta_time
-    # render.camera.position.x -= render.camera.rotation.y * delta_time
-    # render.scene[0].rotation.y -= render.camera.rotation.y * delta_time
-    # render.scene[0].position.x = render.camera.rotation.y * delta_time
-    # render.scene[0].position.x += 10 * delta_time
-
     # Camera rotation
     if keys[K_UP]:
-        if render.scene[0].scale.x < 5:
+        if render.scene[0].scale.x < -render.scene[0].position.z:
             render.scene[0].scale.x += 1 * delta_time
             render.scene[0].scale.y += 1 * delta_time
             render.scene[0].scale.z += 1 * delta_time
@@ -144,7 +138,14 @@ while 1:
                 render.filledMode()
             if event.key == K_2:
                 render.wireFrame()
+            if event.key == K_3:
+                orbit = True
+            if event.key == K_4:
+                render.camera.position.x = 0
+                render.camera.position.z = 0
+                render.camera.position.y = 0
+                orbit = False
 
-    render.render()
+    render.render(orbit)
     delta_time = clock.tick(60) / 1000
     pygame.display.flip()
