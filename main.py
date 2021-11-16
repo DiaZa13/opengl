@@ -4,7 +4,7 @@ import sys
 from gl import Renderer
 from model import Model
 from camera import Camera
-from shaders.textures import *
+from shaders.toon import *
 from obj import Obj
 from texture import Texture
 
@@ -49,12 +49,6 @@ while 1:
     if keys[K_s]:
         render.camera.position.z -= 1 * delta_time
 
-    render.camera.position.x += 1 * delta_time
-    # render.camera.position.y += 1 * delta_time
-    # render.camera.position.z += 1 * delta_time
-    render.scene[0].position.x -= 1 * delta_time
-    # render.scene[0].rotation.y += 10 * delta_time
-    # render.scene[0].rotation.z += 10 * delta_time
 
     # Camera rotation
     if keys[K_UP]:

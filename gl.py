@@ -19,7 +19,7 @@ class Renderer(object):
         self.time = 0
         self.zoom = 0
         self.camera = camera
-        self.point_light = glm.vec3(-10, 5, -5)
+        self.point_light = glm.vec3(-1, 0, 0)
 
         '''
         * fov → radians
