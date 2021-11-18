@@ -4,7 +4,7 @@ import sys
 from gl import Renderer
 from model import Model
 from camera import Camera
-from shaders.mandala_pattern import *
+from shaders.heatmap import *
 from obj import Obj
 from texture import Texture
 
