@@ -8,7 +8,7 @@ uniform mat4 model_matrix;
 uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
 
-uniform float tiempo;
+uniform float _time;
 uniform float _zoom;
 uniform vec3 _light;
 

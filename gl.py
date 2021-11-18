@@ -62,7 +62,7 @@ class Renderer(object):
                                glm.value_ptr(self.viewMatrix()))
             glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'projection_matrix'), 1, GL_FALSE,
                                glm.value_ptr(self.projection_matrix))
-            glUniform1f(glGetUniformLocation(self.active_shader, 'tiempo'), self.time)
+            glUniform1f(glGetUniformLocation(self.active_shader, '_time'), self.time)
             glUniform1f(glGetUniformLocation(self.active_shader, '_zoom'), self.zoom)
 
             glUniform3f(glGetUniformLocation(self.active_shader, '_light'), self.point_light.x, self.point_light.y, self.point_light.z)

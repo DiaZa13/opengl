@@ -4,7 +4,7 @@ import sys
 from gl import Renderer
 from model import Model
 from camera import Camera
-from shaders.toon import *
+from shaders.mandala_pattern import *
 from obj import Obj
 from texture import Texture
 
@@ -24,9 +24,9 @@ model = Obj('models/face.obj')
 texture = Texture('textures/face.bmp')
 among = Model(model, texture)
 among.position.z = -5
-# among.scale.x = 100
-# among.scale.y = 100
-# among.scale.z = 100
+# among.scale.x = 0.03
+# among.scale.y = 0.03
+# among.scale.z = 0.03
 
 render.scene.append(among)
 
