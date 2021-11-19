@@ -20,7 +20,7 @@ void main(){
   if (mod(gl_FragCoord.x, 10.0) >= 5.0 && mod(gl_FragCoord.y, 10.0) >= 5.0) {
     color = vec3(1,0,0);
   } else {
-    color = vec3(1,0,cos(_time));
+    color = vec3(1,0,cos(_time * 5));
   }
   
   gl_FragColor = vec4(color + diffuse_color , 1.0) *  texture(_texture, texture_coords);

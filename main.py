@@ -4,9 +4,14 @@ import sys
 from gl import Renderer
 from model import Model
 from camera import Camera
-from shaders.heatmap import *
+from shaders import heatmap_pattern, static, toon, internal_shadow
 from obj import Obj
 from texture import Texture
+
+shaders = [(toon.vertex_shader, toon.fragment_shader),
+           (static.vertex_shader, static.fragment_shader),
+           (heatmap_pattern.vertex_shader, heatmap_pattern.fragment_shader),
+           (internal_shadow.vertex_shader, internal_shadow.fragment_shader)]
 
 width = 960
 height = 540
@@ -18,17 +23,17 @@ clock = pygame.time.Clock()
 
 camera = Camera()
 render = Renderer(screen, width, height, camera)
-render.setShaders(vertex_shader, fragment_shader)
 
 model = Obj('models/face.obj')
 texture = Texture('textures/face.bmp')
-among = Model(model, texture)
-among.position.z = -5
-# among.scale.x = 0.03
-# among.scale.y = 0.03
-# among.scale.z = 0.03
+face = Model(model, texture)
+face.position.z = -5
+face.scale.x = 2
+face.scale.y = 2
+face.scale.z = 2
 
-render.scene.append(among)
+render.scene.append(face)
+face.setShaders(shaders[0][0], shaders[0][1])
 
 while 1:
     render.time += delta_time
@@ -75,6 +80,14 @@ while 1:
                 render.filledMode()
             if event.key == K_2:
                 render.wireFrame()
+            if event.key == K_3 or event.key == K_KP3:
+                face.setShaders(shaders[0][0], shaders[0][1])
+            if event.key == K_4 or event.key == K_KP4:
+                face.setShaders(shaders[1][0], shaders[1][1])
+            if event.key == K_5 or event.key == K_KP5:
+                face.setShaders(shaders[2][0], shaders[2][1])
+            if event.key == K_6 or event.key == K_KP6:
+                face.setShaders(shaders[3][0], shaders[3][1])
 
     render.render()
     delta_time = clock.tick(60) / 1000

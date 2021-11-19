@@ -1,6 +1,7 @@
 import glm
 from numpy import array, float32
 from OpenGL.GL import *
+from OpenGL.GL.shaders import compileShader, compileProgram
 
 
 class Model(object):
@@ -12,11 +13,16 @@ class Model(object):
         self.position = glm.vec3(0, 0, 0)
         self.rotation = glm.vec3(0, 0, 0)
         self.scale = glm.vec3(1, 1, 1)
-
+        # Shaders
+        self.active_shader = None
         # Textura
         self.texture = texture
         self.gl_texture = glGenTextures(1)
         # Si el modelo tiene más texturas o se desea agregar un mapa normal hay que generar otro buffer de texturas
+
+    def setShaders(self, vertex, fragment):
+        self.active_shader = compileProgram(compileShader(vertex, GL_VERTEX_SHADER),
+                                            compileShader(fragment, GL_FRAGMENT_SHADER))
 
     def createVertex(self):
 

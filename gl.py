@@ -14,8 +14,7 @@ class Renderer(object):
 
         # Objetos que se renderizarán en mi escena
         self.scene = []
-        # Shader
-        self.active_shader = None
+
         self.time = 0
         self.zoom = 0
         self.camera = camera
@@ -40,34 +39,33 @@ class Renderer(object):
     def filledMode(self):
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    def setShaders(self, vertex, fragment):
-        self.active_shader = compileProgram(compileShader(vertex, GL_VERTEX_SHADER),
-                                            compileShader(fragment, GL_FRAGMENT_SHADER))
-
     # Función que se llamará una vez cada cuadro
     def render(self):
         # Color para hacer el clear
         glClearColor(0.2, 0.2, 0.2, 1)
         # Clear al fondo y al buffer de profundidad
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        glUseProgram(self.active_shader)
-
-        if self.active_shader:
-            '''
-            * Uniform location
-            * Cantidad de parámetros a pasar
-            * Transpose
-            '''
-            glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'view_matrix'), 1, GL_FALSE,
-                               glm.value_ptr(self.viewMatrix()))
-            glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'projection_matrix'), 1, GL_FALSE,
-                               glm.value_ptr(self.projection_matrix))
-            glUniform1f(glGetUniformLocation(self.active_shader, '_time'), self.time)
-            glUniform1f(glGetUniformLocation(self.active_shader, '_zoom'), self.zoom)
-
-            glUniform3f(glGetUniformLocation(self.active_shader, '_light'), self.point_light.x, self.point_light.y, self.point_light.z)
 
         for figure in self.scene:
-            glUniformMatrix4fv(glGetUniformLocation(self.active_shader, 'model_matrix'), 1, GL_FALSE,
+            glUseProgram(figure.active_shader)
+
+            glUniformMatrix4fv(glGetUniformLocation(figure.active_shader, 'model_matrix'), 1, GL_FALSE,
                                glm.value_ptr(figure.modelMatrix()))
+
+            if figure.active_shader:
+                '''
+                * Uniform location
+                * Cantidad de parámetros a pasar
+                * Transpose
+                '''
+                glUniformMatrix4fv(glGetUniformLocation(figure.active_shader, 'view_matrix'), 1, GL_FALSE,
+                                   glm.value_ptr(self.viewMatrix()))
+                glUniformMatrix4fv(glGetUniformLocation(figure.active_shader, 'projection_matrix'), 1, GL_FALSE,
+                                   glm.value_ptr(self.projection_matrix))
+                glUniform1f(glGetUniformLocation(figure.active_shader, '_time'), self.time)
+                glUniform1f(glGetUniformLocation(figure.active_shader, '_zoom'), self.zoom)
+
+                glUniform3f(glGetUniformLocation(figure.active_shader, '_light'), self.point_light.x,
+                            self.point_light.y,
+                            self.point_light.z)
             figure.render()
