@@ -10,7 +10,7 @@ class Model(object):
         self.vertex = None
         self.createVertex()
 
-        self.position = glm.vec3(0, 0, 0)
+        self.position = glm.vec3(0, 0, -5)
         self.rotation = glm.vec3(0, 0, 0)
         self.scale = glm.vec3(1, 1, 1)
         # Shaders

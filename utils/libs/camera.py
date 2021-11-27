@@ -52,4 +52,3 @@ class Camera(object):
 
     def update(self, center=glm.vec3(0, 0, 0)):
         self.view_matrix = glm.lookAt(self.position, center, glm.vec3(0.0, 1.0, 0.0))
-        self.position.z = 0.0

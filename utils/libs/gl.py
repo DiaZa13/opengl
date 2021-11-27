@@ -13,7 +13,7 @@ class Renderer(object):
         glViewport(0, 0, width, height)
 
         # Objetos que se renderizarán en mi escena
-        self.scene = []
+        self.figure = None
 
         self.time = 0
         self.zoom = 0
@@ -51,27 +51,27 @@ class Renderer(object):
         # Clear al fondo y al buffer de profundidad
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        for figure in self.scene:
-            glUseProgram(figure.active_shader)
+        if self.figure:
+            glUseProgram(self.figure.active_shader)
 
-            glUniformMatrix4fv(glGetUniformLocation(figure.active_shader, 'model_matrix'), 1, GL_FALSE,
-                               glm.value_ptr(figure.modelMatrix()))
+            glUniformMatrix4fv(glGetUniformLocation(self.figure.active_shader, 'model_matrix'), 1, GL_FALSE,
+                               glm.value_ptr(self.figure.modelMatrix()))
 
-            if figure.active_shader:
+            if self.figure.active_shader:
                 '''
                 * Uniform location
                 * Cantidad de parámetros a pasar
                 * Transpose
                 '''
 
-                glUniformMatrix4fv(glGetUniformLocation(figure.active_shader, 'view_matrix'), 1, GL_FALSE,
+                glUniformMatrix4fv(glGetUniformLocation(self.figure.active_shader, 'view_matrix'), 1, GL_FALSE,
                                    glm.value_ptr(self.camera.view_matrix))
-                glUniformMatrix4fv(glGetUniformLocation(figure.active_shader, 'projection_matrix'), 1, GL_FALSE,
+                glUniformMatrix4fv(glGetUniformLocation(self.figure.active_shader, 'projection_matrix'), 1, GL_FALSE,
                                    glm.value_ptr(self.projection_matrix))
-                glUniform1f(glGetUniformLocation(figure.active_shader, '_time'), self.time)
-                glUniform1f(glGetUniformLocation(figure.active_shader, '_zoom'), self.zoom)
+                glUniform1f(glGetUniformLocation(self.figure.active_shader, '_time'), self.time)
+                glUniform1f(glGetUniformLocation(self.figure.active_shader, '_zoom'), self.zoom)
 
-                glUniform3f(glGetUniformLocation(figure.active_shader, '_light'), self.point_light.x,
+                glUniform3f(glGetUniformLocation(self.figure.active_shader, '_light'), self.point_light.x,
                             self.point_light.y,
                             self.point_light.z)
-            figure.render()
+            self.figure.render()
