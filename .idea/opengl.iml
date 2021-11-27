@@ -9,5 +9,6 @@
     <orderEntry type="jdk" jdkName="Python 3.9 (opengl)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="OpenGL_Carlos" />
+    <orderEntry type="module" module-name="RendererOpenGL" />
   </component>
 </module>

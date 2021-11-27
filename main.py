@@ -1,94 +1,30 @@
 import pygame
+from pygame import image, Color, transform
 from pygame.locals import *
 import sys
-from gl import Renderer
-from model import Model
-from camera import Camera
-from shaders import heatmap_pattern, static, toon, internal_shadow
-from obj import Obj
-from texture import Texture
-
-shaders = [(toon.vertex_shader, toon.fragment_shader),
-           (static.vertex_shader, static.fragment_shader),
-           (heatmap_pattern.vertex_shader, heatmap_pattern.fragment_shader),
-           (internal_shadow.vertex_shader, internal_shadow.fragment_shader)]
+from utils.windows.start import StartWindow
 
 width = 960
 height = 540
 delta_time = 0.0
 pygame.init()
 screen = pygame.display.set_mode((width, height), pygame.DOUBLEBUF | pygame.OPENGL)
-pygame.display.set_caption('OPENGL')
+# Window title
+pygame.display.set_caption('Visualizador de modelos')
 clock = pygame.time.Clock()
 
-camera = Camera()
-render = Renderer(screen, width, height, camera)
+start_page = StartWindow(screen, image, transform, width, height)
+pygame.display.flip()
 
-model = Obj('models/face.obj')
-texture = Texture('textures/face.bmp')
-face = Model(model, texture)
-face.position.z = -5
-face.scale.x = 2
-face.scale.y = 2
-face.scale.z = 2
-
-render.scene.append(face)
-face.setShaders(shaders[0][0], shaders[0][1])
+visualize = False
 
 while 1:
-    render.time += delta_time
-
-    keys = pygame.key.get_pressed()
-
-    # Camera translation
-    if keys[K_d]:
-        render.camera.position.x += 1 * delta_time
-    if keys[K_a]:
-        render.camera.position.x -= 1 * delta_time
-    if keys[K_q]:
-        render.camera.position.y -= 1 * delta_time
-    if keys[K_e]:
-        render.camera.position.y += 1 * delta_time
-    if keys[K_w]:
-        render.camera.position.z += 1 * delta_time
-    if keys[K_s]:
-        render.camera.position.z -= 1 * delta_time
-
-
-    # Camera rotation
-    if keys[K_UP]:
-        # render.camera.rotation.y += 10 * delta_time
-        if render.zoom < 0.5:
-            render.zoom += 1 * delta_time
-    if keys[K_DOWN]:
-        # render.camera.rotation.y -= 10 * delta_time
-        if render.zoom > 0:
-            render.zoom -= 1 * delta_time
-    if keys[K_LEFT]:
-        render.camera.rotation.x -= 10 * delta_time
-    if keys[K_RIGHT]:
-        render.camera.rotation.x += 10 * delta_time
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+        if not visualize:
+            visualize = start_page.move_options(event, pygame)
+        elif visualize:
+            visualize = False
 
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                sys.exit()
-            if event.key == K_1:
-                render.filledMode()
-            if event.key == K_2:
-                render.wireFrame()
-            if event.key == K_3 or event.key == K_KP3:
-                face.setShaders(shaders[0][0], shaders[0][1])
-            if event.key == K_4 or event.key == K_KP4:
-                face.setShaders(shaders[1][0], shaders[1][1])
-            if event.key == K_5 or event.key == K_KP5:
-                face.setShaders(shaders[2][0], shaders[2][1])
-            if event.key == K_6 or event.key == K_KP6:
-                face.setShaders(shaders[3][0], shaders[3][1])
-
-    render.render()
-    delta_time = clock.tick(60) / 1000
     pygame.display.flip()

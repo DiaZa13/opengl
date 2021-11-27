@@ -1,4 +1,4 @@
-from shaders.heatmap import vertex_shader
+from utils.shaders.heatmap import vertex_shader
 
 vertex_shader = vertex_shader
 

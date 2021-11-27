@@ -1,4 +1,4 @@
-from shaders.static import vertex_shader
+from utils.shaders.static import vertex_shader
 
 vertex_shader = vertex_shader
 

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../OpenGL_Carlos/.idea/OpenGL_Carlos.iml" filepath="$PROJECT_DIR$/../OpenGL_Carlos/.idea/OpenGL_Carlos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../openGl_Mendez/.idea/RendererOpenGL.iml" filepath="$PROJECT_DIR$/../openGl_Mendez/.idea/RendererOpenGL.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/opengl.iml" filepath="$PROJECT_DIR$/.idea/opengl.iml" />
     </modules>
   </component>
