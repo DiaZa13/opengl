@@ -35,5 +35,3 @@ class Obj(object):
                         self.normals2.append(list(map(float, value.split(' '))))
                 elif prefix == 'f':
                     self.faces.append([list(map(int, vertex.split('/'))) for vertex in value.split(' ')])
-                elif prefix == 'o':
-                    newTexture = True

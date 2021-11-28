@@ -1,5 +1,4 @@
 import pygame
-from pygame import image, Color, transform
 from pygame.locals import *
 import sys
 from utils.libs.texture import Texture
@@ -9,7 +8,7 @@ from utils.libs.model import Model
 from utils.libs.camera import Camera
 from utils.shaders import heatmap_pattern, static, toon, internal_shadow, multicolor
 
-shaders = [(multicolor.vertex_shader, multicolor.fragment_shader),
+shaders = [(toon.vertex_shader, toon.fragment_shader),
            (static.vertex_shader, static.fragment_shader),
            (heatmap_pattern.vertex_shader, heatmap_pattern.fragment_shader),
            (internal_shadow.vertex_shader, internal_shadow.fragment_shader)]
@@ -27,11 +26,17 @@ clock = pygame.time.Clock()
 camera = Camera()
 render = Renderer(screen, width, height, camera)
 
-models = [Model(Obj('utils/models/face.obj'), Texture('utils/textures/face.bmp')),
-          Model(Obj('utils/models/face.obj'), Texture('utils/textures/face.bmp'))]
-models[0].setShaders(shaders[0][0], shaders[0][1])
-models[1].setShaders(shaders[1][0], shaders[1][1])
+models = [Model(Obj('utils/models/alien.obj'), Texture('utils/textures/alien.bmp')),
+          Model(Obj('utils/models/spaceship.obj'), Texture('utils/textures/spaceship.bmp')),
+          Model(Obj('utils/models/hero.obj'), Texture('utils/textures/hero.bmp')),
+          Model(Obj('utils/models/among_us.obj'), Texture('utils/textures/among_us.bmp'))]
+
+# Default shader
+for x in models:
+    x.setShaders(shaders[0][0], shaders[0][1])
+
 model = 0
+# Renderizando el primer modelo
 render.figure = models[model]
 
 mouse_clicked = False
@@ -112,9 +117,9 @@ while 1:
             if mouse_clicked:
                 mouse_x, mouse_y = event.rel
                 render.camera.mouseMovement(mouse_x, mouse_y, render.figure.position)
+                # render.camera.mouseMovement(mouse_x, mouse_y, render.figure.position)
 
     render.figure = models[model]
-    # render.camera.update(render.figure.position)
     render.render(True)
     delta_time = clock.tick(60) / 1000
     pygame.display.flip()
