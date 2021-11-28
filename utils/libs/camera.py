@@ -11,7 +11,7 @@ class Camera(object):
         self.angle = 0
         self.radius = -5
 
-        self.view_matrix = glm.inverse(self.cameraMatrix())
+        self.update()
 
         self.mouse_sensitivity = 0
 
@@ -53,8 +53,11 @@ class Camera(object):
 
     def mouseMovement(self, mouse_x, mouse_y, center=glm.vec3(0.0, 0.0, 0.0)):
         self.position.x -= 1 * self.mouse_sensitivity * mouse_x
-        self.position.y += 1 * self.mouse_sensitivity * mouse_y
-        self.view_matrix = glm.lookAt(self.position, center, glm.vec3(0, 1, 0))
+        self.position.y -= 1 * self.mouse_sensitivity * mouse_y
+        self.view_matrix = glm.lookAt(center - self.position, center, glm.vec3(0, 1, 0))
 
-    def update(self, center=glm.vec3(0, 0, 0)):
-        self.view_matrix = glm.lookAt(self.position, center, glm.vec3(0.0, 1.0, 0.0))
+    def update(self, center=glm.vec3(0, 0, -5)):
+        self.position.x = sin(glm.radians(self.angle)) * self.radius
+        self.position.z = cos(glm.radians(self.angle)) * self.radius
+
+        self.view_matrix = glm.lookAt(center - self.position, center, glm.vec3(0, 1, 0))

@@ -1,6 +1,7 @@
 import glm
 from OpenGL.GL import *
 from OpenGL.GL.shaders import compileShader, compileProgram
+from numpy import array, float32
 
 
 class Renderer(object):
@@ -29,6 +30,17 @@ class Renderer(object):
         # Projection Matrix
         self.projection_matrix = glm.perspective(glm.radians(60), self.width / self.height, 0.1, 1000)
 
+        # Floor
+        self.floor_data = array([10, -2, 3, 1.0, 0.0, 0.0,
+                                 -10, -2, 3, 0.0, 1.0, 0.0,
+                                 -10, -2, -5, 0.0, 0.0, 1.0,
+                                 10, -2, -5, 1.0, 1.0, 0.0], dtype=float32)
+        self.floor_shader = None
+        # Vertex buffer → posición en memoria donde guardaré los vértices
+        self.VBO = glGenBuffers(1)
+        # Vertex array object → donde se guardan los buffers
+        self.VAO = glGenVertexArrays(1)
+
     # viewport_matrix (opengl ya lo hace) * projection_matrix * view_matrix * model_matrix * pos
 
     def wireFrame(self):
@@ -37,12 +49,28 @@ class Renderer(object):
     def filledMode(self):
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    def orbitMovement(self):
-        return self.camera.orbitMovement(self.scene[0].position)
+    def floorShader(self, vertex, fragment):
+        self.floor_shader = compileProgram(compileShader(vertex, GL_VERTEX_SHADER),
+                                           compileShader(fragment, GL_FRAGMENT_SHADER))
 
-    def setShaders(self, vertex, fragment):
-        self.active_shader = compileProgram(compileShader(vertex, GL_VERTEX_SHADER),
-                                            compileShader(fragment, GL_FRAGMENT_SHADER))
+    def drawFloor(self):
+        glBindVertexArray(self.VAO)
+        glBindBuffer(GL_ARRAY_BUFFER, self.VBO)
+
+        glBufferData(GL_ARRAY_BUFFER, self.floor_data.nbytes, self.floor_data, GL_STATIC_DRAW)
+
+        # Posición
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * 6, ctypes.c_void_p(0))
+        # Color
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 4 * 6, ctypes.c_void_p(4 * 3))
+
+        # Activar un atributo específico
+        glEnableVertexAttribArray(0)  # Activando el atributo de posición
+        glEnableVertexAttribArray(1)  # Activando el atributo de color
+
+        glDrawArrays(GL_QUADS, 0, 4)
+
+        glUseProgram(self.floor_shader)
 
     # Función que se llamará una vez cada cuadro
     def render(self, orbit=False):
@@ -75,3 +103,6 @@ class Renderer(object):
                             self.point_light.y,
                             self.point_light.z)
             self.figure.render()
+
+            # TODO hacer que el floor tenga su propio shader
+            self.drawFloor()

@@ -1,12 +1,13 @@
 import pygame
 from pygame.locals import *
+from pygame import mixer
 import sys
 from utils.libs.texture import Texture
 from utils.libs.gl import Renderer
 from utils.libs.obj import Obj
 from utils.libs.model import Model
 from utils.libs.camera import Camera
-from utils.shaders import heatmap_pattern, static, toon, internal_shadow, multicolor
+from utils.shaders import heatmap_pattern, static, toon, internal_shadow, multicolor, floor
 
 shaders = [(toon.vertex_shader, toon.fragment_shader),
            (static.vertex_shader, static.fragment_shader),
@@ -25,6 +26,16 @@ clock = pygame.time.Clock()
 
 camera = Camera()
 render = Renderer(screen, width, height, camera)
+
+# Music
+mixer.init()
+background_music = mixer.Sound('utils/fonts/background_music.mp3')
+flip = mixer.Sound('utils/fonts/flip.mp3')
+mixer.Channel(0).set_volume(0.8)
+mixer.Channel(0).play(background_music, -1, 0, 1)
+
+# Floor shader
+render.floorShader(floor.vertex_shader, floor.fragment_shader)
 
 models = [Model(Obj('utils/models/alien.obj'), Texture('utils/textures/alien.bmp')),
           Model(Obj('utils/models/spaceship.obj'), Texture('utils/textures/spaceship.bmp')),
@@ -79,8 +90,10 @@ while 1:
             # Changing the actual model
             elif event.key == K_LEFT:
                 model = (model - 1) % len(models)
+                mixer.Channel(1).play(flip)
             elif event.key == K_RIGHT:
                 model = (model - 1) % len(models)
+                mixer.Channel(1).play(flip)
             # Changing the filled mode
             elif event.key == K_1:
                 render.filledMode()
