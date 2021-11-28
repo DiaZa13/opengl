@@ -14,19 +14,20 @@ uniform float _zoom;
 out vec3 out_color;
 out vec2 texture_coords;
 out vec3 out_normal;
+out float out_intensity;
 
 void main(){ 
 
     vec4 light = vec4(_light, 1.0);
     vec4 normal = vec4(_normal, 0.0);
-    vec4 position = vec4(_position, 1.0) + normal * _zoom;
+    vec4 position = vec4(_position, 1.0);
     position = model_matrix * position;
 
     // Intensidad
     vec4 lightning = normalize(light - position);
-    float intensity = dot(model_matrix * normal, lightning);
+    out_intensity = dot(model_matrix * normal, lightning);
 
-    out_color = vec3(1.0, 1.0, 1.0) * intensity;
+    out_color = vec3(1.0, 1.0, 1.0) * out_intensity;
     // Coordenadas de textura
     texture_coords = _textures;
     // Posición

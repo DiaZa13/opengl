@@ -7,12 +7,14 @@ from utils.libs.gl import Renderer
 from utils.libs.obj import Obj
 from utils.libs.model import Model
 from utils.libs.camera import Camera
-from utils.shaders import heatmap_pattern, static, toon, internal_shadow, multicolor, floor
+from utils.shaders import heatmap, heatmap_pattern, static, toon, internal_shadow, mandala_pattern, floor, circles
 
 shaders = [(toon.vertex_shader, toon.fragment_shader),
            (static.vertex_shader, static.fragment_shader),
            (heatmap_pattern.vertex_shader, heatmap_pattern.fragment_shader),
-           (internal_shadow.vertex_shader, internal_shadow.fragment_shader)]
+           (internal_shadow.vertex_shader, internal_shadow.fragment_shader),
+           (mandala_pattern.vertex_shader, mandala_pattern.fragment_shader),
+           (circles.vertex_shader, circles.fragment_shader)]
 
 width = 960
 height = 540
@@ -29,10 +31,13 @@ render = Renderer(screen, width, height, camera)
 
 # Music
 mixer.init()
-background_music = mixer.Sound('utils/fonts/background_music.mp3')
-flip = mixer.Sound('utils/fonts/flip.mp3')
+background_music1 = mixer.Sound('utils/sounds/background_music.mp3')
+background_music2 = mixer.Sound('utils/sounds/navidad_b&b.mp3')
+flip = mixer.Sound('utils/sounds/flip.mp3')
 mixer.Channel(0).set_volume(0.8)
-mixer.Channel(0).play(background_music, -1, 0, 1)
+mixer.Channel(0).play(background_music1, 0, 0, 1)
+mixer.Channel(0).queue(background_music2)
+
 
 # Floor shader
 render.floorShader(floor.vertex_shader, floor.fragment_shader)
@@ -87,6 +92,10 @@ while 1:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 sys.exit()
+            elif event.key == pygame.K_UP:
+                render.zoom += 0.05
+            elif event.key == pygame.K_DOWN:
+                render.zoom -= 0.05
             # Changing the actual model
             elif event.key == K_LEFT:
                 model = (model - 1) % len(models)
@@ -95,19 +104,25 @@ while 1:
                 model = (model - 1) % len(models)
                 mixer.Channel(1).play(flip)
             # Changing the filled mode
-            elif event.key == K_1:
+            elif event.key == K_5:
                 render.filledMode()
-            elif event.key == K_2:
+            elif event.key == K_6:
                 render.wireFrame()
             # Changing the actual shader
-            elif event.key == K_3 or event.key == K_KP3:
+            elif event.key == K_1 or event.key == K_KP1:
                 models[model].setShaders(shaders[0][0], shaders[0][1])
-            elif event.key == K_4 or event.key == K_KP4:
+            elif event.key == K_2 or event.key == K_KP2:
+                render.zoom = 0
                 models[model].setShaders(shaders[1][0], shaders[1][1])
-            elif event.key == K_5 or event.key == K_KP5:
+            elif event.key == K_3 or event.key == K_KP3:
+                render.zoom = 0
                 models[model].setShaders(shaders[2][0], shaders[2][1])
-            elif event.key == K_6 or event.key == K_KP6:
-                models[model].setShaders(shaders[3][0], shaders[3][1])
+            elif event.key == K_4 or event.key == K_KP4:
+                render.zoom = 0
+                if model == 3:
+                    models[model].setShaders(shaders[4][0], shaders[4][1])
+                else:
+                    models[model].setShaders(shaders[5][0], shaders[5][1])
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:

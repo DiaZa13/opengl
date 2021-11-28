@@ -8,7 +8,6 @@ uniform mat4 model_matrix;
 uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
 
-uniform float _time;
 uniform float _zoom;
 uniform vec3 _light;
 
@@ -19,7 +18,7 @@ void main(){
 
     vec4 light = vec4(_light, 1.0);
     vec4 normal = vec4(_normal, 0.0);
-    vec4 position = vec4(_position, 1.0);
+    vec4 position = vec4(_position, 1.0) + normal * _zoom;
     position = model_matrix * position;
 
     vec4 lightning = normalize(light - position);
@@ -32,22 +31,23 @@ void main(){
 
 fragment_shader = '''
 #version 450
-layout (location = 0) out vec4 color;
-
-in float out_intensity;
 in vec2 texture_coords;
+in float out_intensity;
 
 uniform sampler2D _texture;
+uniform vec2 _resolution;
+uniform float _time;
 
 void main(){
-    float intensity = 0;
-     if (out_intensity > 0.7){
-        intensity = 1;
-    }else if (out_intensity > 0.4){
-        intensity = 0.5;
-    }else{
-        intensity = 0.1;
-    }
-    color = texture(_texture, texture_coords) * intensity;
+    vec3 color = vec3(0.0);
+    vec2 coords = gl_FragCoord.xy / _resolution;
+    vec2 translate = vec2(-0.5);
+    coords += translate;
+    
+    color.r += abs(0.1 + length(coords) - 0.6 * abs(sin(_time * 0.9 / 12.0)));
+    color.g += abs(0.1 + length(coords) - 0.6 * abs(sin(_time * 0.6 / 4.0)));
+    color.b += abs(0.1 + length(coords) - 0.6 * abs(sin(_time * 0.3 / 9.0)));
+    
+    gl_FragColor = vec4(0.2 / color, 1.0) * texture(_texture, texture_coords) * out_intensity;
 }
 '''

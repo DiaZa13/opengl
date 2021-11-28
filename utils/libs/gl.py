@@ -70,8 +70,6 @@ class Renderer(object):
 
         glDrawArrays(GL_QUADS, 0, 4)
 
-        glUseProgram(self.floor_shader)
-
     # Función que se llamará una vez cada cuadro
     def render(self, orbit=False):
         # Color para hacer el clear
@@ -102,6 +100,11 @@ class Renderer(object):
                 glUniform3f(glGetUniformLocation(self.figure.active_shader, '_light'), self.point_light.x,
                             self.point_light.y,
                             self.point_light.z)
+
+                glUniform1f(glGetUniformLocation(self.figure.active_shader, '_zoom'), self.zoom)
+
+                glUniform2f(glGetUniformLocation(self.figure.active_shader, '_resolution'), self.width, self.height)
+
             self.figure.render()
 
             # TODO hacer que el floor tenga su propio shader

@@ -8,9 +8,11 @@ layout (location = 0) out vec4 color;
 
 in vec3 out_color;
 in vec2 texture_coords;
+in float out_intensity;
 
 uniform sampler2D _texture;
 uniform float _time;
+uniform float _zoom;
 
 // Extraído de: https://www.youtube.com/watch?v=8GaZsg8vJUw&list=PL4neAtv21WOmIrTrkNO3xCyrxg4LKkrF7&index=34
 float random2d(vec2 coord){
@@ -28,7 +30,10 @@ void main(){
     noise_color = vec3(noise);
 
     color *= noise_color;
+    
+    color.r += _zoom;
+    color.g -= _zoom;
 
-    gl_FragColor = vec4(color, 0.1) * texture(_texture, texture_coords);
+    gl_FragColor = vec4(color, 0.1) * texture(_texture, texture_coords) * out_intensity;
 }
 '''

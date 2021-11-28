@@ -7,25 +7,27 @@ layout (location = 2) in vec3 _normal;
 uniform mat4 model_matrix;
 uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
+uniform float _time;
 
 uniform vec3 _light;
 uniform float _zoom;
 
 out vec3 out_color;
 out vec2 texture_coords;
+out float out_intensity;
 
 void main(){ 
 
     vec4 light = vec4(_light, 1.0);
     vec4 normal = vec4(_normal, 0.0);
-    vec4 position = vec4(_position, 1.0) + normal * _zoom;
+    vec4 position = vec4(_position, 1.0) + normal * sin(_time / 3.0);
     position = model_matrix * position;
 
     // Intensidad
     vec4 lightning = normalize(light - position);
-    float intensity = dot(model_matrix * normal, lightning);
+    out_intensity = dot(model_matrix * normal, lightning);
 
-    out_color = vec3(1.0, 1.0, 1.0) * intensity;
+    out_color = vec3(1.0, 1.0, 1.0) * out_intensity;
     // Coordenadas de textura
     texture_coords = _textures;
     // Posición
@@ -39,6 +41,7 @@ layout (location = 0) out vec4 color;
 
 in vec3 out_color;
 in vec2 texture_coords;
+in float out_intensity;
 
 uniform sampler2D _texture;
 uniform float _time;
@@ -80,6 +83,9 @@ void main(){
     
     color *= noise_color;
     
-    gl_FragColor = vec4(color, 0.1) * texture(_texture, texture_coords);
+    color.r += sin(_time);
+    color.g += sin(_time);
+    
+    gl_FragColor = vec4(color, 0.1) * texture(_texture, texture_coords) * out_intensity;
 }
 '''
